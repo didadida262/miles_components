@@ -129,7 +129,7 @@ const handleValidationError = (errors: string[]) => {
 const containerWidth = ref(0)
 
 const chartWidth = computed(() => {
-  return Math.max(450, containerWidth.value - 100) // 减去padding
+  return Math.max(800, containerWidth.value - 100) // 增加最小宽度，确保填满容器
 })
 
 const updateWidth = () => {

@@ -250,7 +250,7 @@ const getXPosition = (x: string | number) => {
   const index = props.data.findIndex(point => point.x === x)
   if (index === -1) return padding.left
   
-  // 让数据点从图表区域开始到结束均匀分布
+  // 让数据点从图表区域开始到结束均匀分布，充分利用宽度
   const step = chartWidth.value / Math.max(1, props.data.length - 1)
   return padding.left + index * step
 }
