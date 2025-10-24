@@ -227,4 +227,14 @@ onUnmounted(() => {
   box-sizing: border-box;
 }
 
+.adaptive-chart-container {
+  width: 100%;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  margin-top: 16px;
+  box-sizing: border-box;
+  border: 2px solid #e5e7eb;
+}
+
 </style>

@@ -63,6 +63,10 @@ export interface LineChartProps {
   width?: number
   /** 图表高度 */
   height?: number
+  /** 是否自动适应容器宽度 */
+  autoWidth?: boolean
+  /** 是否自动适应容器高度 */
+  autoHeight?: boolean
   /** 是否可点击 */
   clickable?: boolean
   /** 点击事件数据 */

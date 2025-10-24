@@ -250,6 +250,8 @@ const handleValidationError = (errors) => {
 | `config` | `ChartConfig` | - | 图表配置 |
 | `width` | `number` | `800` | 图表宽度 |
 | `height` | `number` | `400` | 图表高度 |
+| `autoWidth` | `boolean` | `false` | 是否自动适应容器宽度 |
+| `autoHeight` | `boolean` | `false` | 是否自动适应容器高度 |
 | `clickable` | `boolean` | `false` | 是否可点击 |
 | `clickData` | `any` | `undefined` | 点击事件数据 |
 | `enableValidation` | `boolean` | `false` | 是否启用数据验证 |
@@ -451,6 +453,66 @@ const handlePointClick = (point, index) => {
 <script setup>
 import { TaskCard } from 'miles-wang-vue-components'
 </script>
+```
+
+### 自适应宽度示例
+
+```vue
+<template>
+  <div class="chart-wrapper">
+    <LineChart
+      :data="chartData"
+      :config="chartConfig"
+      :height="400"
+      :auto-width="true"
+      :enable-validation="true"
+      @validation-error="handleValidationError"
+    />
+  </div>
+</template>
+
+<script setup>
+import { ref } from 'vue'
+import { LineChart } from 'miles-wang-vue-components'
+import type { DataPoint, ChartConfig } from 'miles-wang-vue-components'
+
+const chartData = ref<DataPoint[]>([
+  { x: '2024-01', y: 4.2 },
+  { x: '2024-02', y: 4.4 },
+  { x: '2024-03', y: 3.7 },
+  { x: '2024-04', y: 4.0 }
+])
+
+const chartConfig = ref<ChartConfig>({
+  title: '自适应宽度图表',
+  subtitle: '(自动适应容器宽度)',
+  xAxisLabel: '月份',
+  yAxisLabel: '数值',
+  yMin: 0,
+  yMax: 6,
+  yStep: 1,
+  showGrid: true,
+  showDots: true,
+  lineColor: '#A0A0FF',
+  dotColor: '#FFFFFF',
+  strokeWidth: 3,
+  dotSize: 6,
+  showShadow: true
+})
+
+const handleValidationError = (errors) => {
+  console.error('数据验证错误:', errors)
+}
+</script>
+
+<style scoped>
+.chart-wrapper {
+  width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
+}
+</style>
 ```
 
 ### 数据验证示例

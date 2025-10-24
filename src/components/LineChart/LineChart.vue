@@ -15,12 +15,16 @@
     </div>
 
     <!-- 图表容器 -->
-    <div class="line-chart__container" :style="{ width: `${width}px`, height: `${height}px` }">
+    <div 
+      ref="chartContainer"
+      class="line-chart__container" 
+      :style="containerStyle"
+    >
       <svg
-        :width="width"
-        :height="height"
+        :width="actualWidth"
+        :height="actualHeight"
         class="line-chart__svg"
-        :viewBox="`0 0 ${width} ${height}`"
+        :viewBox="`0 0 ${actualWidth} ${actualHeight}`"
         preserveAspectRatio="xMidYMid meet"
       >
         <!-- 网格线 -->
@@ -138,7 +142,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, withDefaults, defineProps, defineEmits, onMounted } from 'vue'
+import { ref, computed, withDefaults, defineProps, defineEmits, onMounted, onUnmounted } from 'vue'
 import type { DataPoint, ChartConfig, ValidationResult } from './LineChart.types'
 
 // 定义Props接口
@@ -147,6 +151,8 @@ interface Props {
   config?: ChartConfig
   width?: number
   height?: number
+  autoWidth?: boolean
+  autoHeight?: boolean
   clickable?: boolean
   clickData?: any
   enableValidation?: boolean
@@ -157,6 +163,8 @@ interface Props {
 const props = withDefaults(defineProps<Props>(), {
   width: 400,
   height: 300,
+  autoWidth: false,
+  autoHeight: false,
   clickable: false,
   clickData: undefined,
   enableValidation: true,
@@ -227,9 +235,37 @@ const validateData = (data: DataPoint[]): ValidationResult => {
   return { isValid: errors.length === 0, errors, warnings }
 }
 
+// 响应式尺寸
+const chartContainer = ref<HTMLElement>()
+const containerWidth = ref(props.width)
+const containerHeight = ref(props.height)
+
+// 计算实际尺寸
+const actualWidth = computed(() => {
+  return props.autoWidth ? containerWidth.value : props.width
+})
+
+const actualHeight = computed(() => {
+  return props.autoHeight ? containerHeight.value : props.height
+})
+
+// 容器样式
+const containerStyle = computed(() => {
+  if (props.autoWidth || props.autoHeight) {
+    return {
+      width: props.autoWidth ? '100%' : `${props.width}px`,
+      height: props.autoHeight ? `${props.height}px` : `${props.height}px`
+    }
+  }
+  return {
+    width: `${props.width}px`,
+    height: `${props.height}px`
+  }
+})
+
 // 计算图表区域尺寸
-const chartWidth = computed(() => props.width - padding.left - padding.right)
-const chartHeight = computed(() => props.height - padding.top - padding.bottom)
+const chartWidth = computed(() => actualWidth.value - padding.left - padding.right)
+const chartHeight = computed(() => actualHeight.value - padding.top - padding.bottom)
 
 // 计算Y轴刻度
 const yTicks = computed(() => {
@@ -352,8 +388,23 @@ const handlePointClick = (point: DataPoint, index: number) => {
   emit('pointClick', point, index)
 }
 
-// 数据验证
+// 更新容器尺寸
+const updateContainerSize = () => {
+  if (chartContainer.value) {
+    containerWidth.value = chartContainer.value.clientWidth
+    containerHeight.value = chartContainer.value.clientHeight
+  }
+}
+
+// 数据验证和响应式更新
 onMounted(() => {
+  // 初始化容器尺寸
+  if (props.autoWidth || props.autoHeight) {
+    updateContainerSize()
+    // 监听窗口大小变化
+    window.addEventListener('resize', updateContainerSize)
+  }
+  
   if (props.enableValidation) {
     const validation = props.customValidator ? props.customValidator(props.data) : validateData(props.data)
     if (!validation.isValid) {
@@ -363,6 +414,13 @@ onMounted(() => {
     if (validation.warnings.length > 0) {
       console.warn('LineChart数据警告:', validation.warnings)
     }
+  }
+})
+
+// 清理事件监听器
+onUnmounted(() => {
+  if (props.autoWidth || props.autoHeight) {
+    window.removeEventListener('resize', updateContainerSize)
   }
 })
 </script>
