@@ -46,7 +46,7 @@ interface TaskCardProps {
   /** 单位文本 */
   unit: string
   /** 图标类型 */
-  iconType?: 'clipboard' | 'shopping-cart' | 'folder' | 'document' | 'calendar' | 'task'
+  iconType?: 'pending' | 'purchase' | 'schedule'
   /** 是否可点击 */
   clickable?: boolean
   /** 自定义类名 */
@@ -62,7 +62,7 @@ interface TaskCardEmits {
 
 // 设置默认值
 const props = withDefaults(defineProps<TaskCardProps>(), {
-  iconType: 'clipboard',
+  iconType: 'purchase',
   clickable: false,
   customClass: '',
   clickData: undefined
@@ -70,10 +70,17 @@ const props = withDefaults(defineProps<TaskCardProps>(), {
 
 const emit = defineEmits<TaskCardEmits>()
 
-// 获取图标路径 - 统一使用sample.png
+// 图标映射字典
+const iconMap: Record<string, string> = {
+  'pending': '/assets/icons/icon_ Pending.png',
+  'purchase': '/assets/icons/icon_ Purchase.png',
+  'schedule': '/assets/icons/icon_Schedule.png'
+}
+
+// 获取图标路径
 const getIconSrc = (iconType: string) => {
-  // 统一使用sample.png图片
-  return '/assets/sample.png'
+  // 如果iconType存在且匹配，使用对应图标，否则使用默认的purchase图标
+  return iconMap[iconType] || iconMap['purchase']
 }
 
 // 处理点击事件
@@ -102,6 +109,10 @@ const handleClick = () => {
   max-width: 280px;
   box-sizing: border-box;
   flex-shrink: 0;
+  user-select: none; // 禁止文本选中
+  -webkit-user-select: none; // Safari兼容
+  -moz-user-select: none; // Firefox兼容
+  -ms-user-select: none; // IE兼容
   
   &:hover {
     transform: scale(1.05);
@@ -121,7 +132,7 @@ const handleClick = () => {
   gap: 12px;
   z-index: 2;
   min-width: 0;
-  max-width: calc(100% - 80px); // 为图标留出空间
+  max-width: calc(100% - 100px); // 为图标容器留出空间，加上20px右边距
   overflow: hidden;
 }
 
@@ -187,8 +198,10 @@ const handleClick = () => {
   right: 20px;
   top: 50%;
   transform: translateY(-50%);
-  width: 60px;
-  height: 60px;
+  width: calc(100% - 40px); // 基于卡片高度，减去上下padding
+  height: calc(100% - 40px); // 基于卡片高度，减去上下padding
+  max-width: 80px; // 设置最大宽度限制
+  max-height: 80px; // 设置最大高度限制
   z-index: 1;
   opacity: 0.8;
   display: flex;
@@ -198,7 +211,7 @@ const handleClick = () => {
   .task-card__icon-img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: contain; // 保持宽高比，完全展示在容器内
     border-radius: 8px;
   }
 }

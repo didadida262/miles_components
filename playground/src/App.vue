@@ -15,7 +15,7 @@
             tag="请购单"
             :number="7"
             unit="笔"
-            icon-type="clipboard"
+            icon-type="pending"
             :clickable="true"
             @click="handleCardClick"
           />
@@ -24,7 +24,7 @@
             tag="请购单"
             :number="5"
             unit="张"
-            icon-type="clipboard"
+            icon-type="purchase"
             :clickable="true"
             @click="handleCardClick"
           />
@@ -33,10 +33,19 @@
             tag="文件"
             :number="15"
             unit="个"
-            icon-type="document"
+            icon-type="schedule"
             :clickable="true"
             @click="handleCardClick"
           />
+          <TaskCard
+          title="文档"
+          tag="文件"
+          :number="15"
+          unit="个"
+          icon-type=""
+          :clickable="true"
+          @click="handleCardClick"
+        />
         </div>
       </div>
 
