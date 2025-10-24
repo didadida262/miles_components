@@ -1,0 +1,139 @@
+/* 组件库样式文件 */
+@import './variables.less';
+
+/* TaskCard 组件样式 */
+.task-card {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.28) 100%);
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  min-height: 120px;
+  overflow: hidden;
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+
+.task-card--clickable {
+  cursor: pointer;
+}
+
+.task-card--clickable:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  background: linear-gradient(135deg, #A0A0FF 0%, #5D78FF 100%);
+  color: #ffffff;
+}
+
+.task-card--clickable:hover .task-card__title {
+  color: #ffffff;
+}
+
+.task-card--clickable:hover .task-card__tag {
+  background: rgba(255, 255, 255, 0.2);
+  color: #ffffff;
+}
+
+.task-card--clickable:hover .task-card__number {
+  color: #ffffff;
+}
+
+.task-card--clickable:hover .task-card__unit {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+.task-card__content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  z-index: 2;
+  min-width: 0;
+  max-width: calc(100% - 80px);
+  overflow: hidden;
+}
+
+.task-card__header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: nowrap;
+}
+
+.task-card__title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #1F2937;
+  margin: 0;
+  line-height: 1.4;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  flex-shrink: 0;
+  min-width: 0;
+}
+
+.task-card__tag {
+  display: inline-block;
+  padding: 4px 8px;
+  background: #F3F4F6;
+  color: #6B7280;
+  font-size: 12px;
+  font-weight: 500;
+  border-radius: 12px;
+  white-space: nowrap;
+  flex-shrink: 0;
+  max-width: 80px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.task-card__number-section {
+  display: flex;
+  align-items: baseline;
+  gap: 4px;
+}
+
+.task-card__number {
+  font-size: 32px;
+  font-weight: 700;
+  color: #1F2937;
+  line-height: 1;
+}
+
+.task-card__unit {
+  font-size: 14px;
+  color: #9CA3AF;
+  font-weight: 500;
+}
+
+.task-card__icon {
+  position: absolute;
+  right: 20px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 60px;
+  height: 60px;
+  z-index: 1;
+  opacity: 0.8;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.task-card__icon .task-card__icon-img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  border-radius: 8px;
+}
+
+.task-card--clickable:hover .task-card__icon .task-card__icon-img {
+  filter: brightness(1.2) contrast(1.1);
+  transform: scale(1.05);
+}

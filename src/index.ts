@@ -6,6 +6,9 @@
 import type { App } from 'vue'
 import { registerComponents } from './components'
 
+// 引入样式文件
+import './styles/index.css'
+
 // 导出所有组件
 export * from './components'
 
