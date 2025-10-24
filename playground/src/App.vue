@@ -16,6 +16,9 @@
             :number="7"
             unit="笔"
             icon-type="pending"
+            :clickable="true"
+            :click-data="{ id: 1, type: 'pending' }"
+            @click="handleCardClick"
           />
           <TaskCard
             title="待分配"
@@ -23,6 +26,9 @@
             :number="5"
             unit="张"
             icon-type="purchase"
+            :clickable="true"
+            :click-data="{ id: 2, type: 'purchase' }"
+            @click="handleCardClick"
           />
           <TaskCard
             title="文档"
@@ -30,6 +36,9 @@
             :number="15"
             unit="个"
             icon-type="schedule"
+            :clickable="true"
+            :click-data="{ id: 3, type: 'schedule' }"
+            @click="handleCardClick"
           />
         </div>
       </div>
@@ -39,7 +48,10 @@
 </template>
 
 <script setup lang="ts">
-// 组件演示页面
+// 处理卡片点击事件
+const handleCardClick = (clickData: any) => {
+  console.log('TaskCard被点击了！', clickData)
+}
 </script>
 
 <style scoped>
