@@ -16,8 +16,6 @@
             :number="7"
             unit="笔"
             icon-type="pending"
-            :clickable="true"
-            @click="handleCardClick"
           />
           <TaskCard
             title="待分配"
@@ -25,8 +23,6 @@
             :number="5"
             unit="张"
             icon-type="purchase"
-            :clickable="true"
-            @click="handleCardClick"
           />
           <TaskCard
             title="文档"
@@ -34,44 +30,16 @@
             :number="15"
             unit="个"
             icon-type="schedule"
-            :clickable="true"
-            @click="handleCardClick"
           />
-          <TaskCard
-          title="文档"
-          tag="文件"
-          :number="15"
-          unit="个"
-          icon-type=""
-          :clickable="true"
-          @click="handleCardClick"
-        />
         </div>
       </div>
 
-      <div class="demo-section">
-        <h2>交互测试</h2>
-        <p>点击上面的卡片测试交互功能</p>
-        <div v-if="clickCount > 0" class="status success">
-          🎉 已点击 {{ clickCount }} 次
-        </div>
-        <div v-else class="status info">
-          👆 点击上面的卡片测试
-        </div>
-      </div>
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from 'vue'
-
-const clickCount = ref(0)
-
-const handleCardClick = () => {
-  clickCount.value++
-  console.log('TaskCard被点击了！')
-}
+// 组件演示页面
 </script>
 
 <style scoped>
@@ -137,22 +105,4 @@ const handleCardClick = () => {
   justify-content: flex-start;
 }
 
-.status {
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  display: inline-block;
-  margin-top: 16px;
-}
-
-.status.success {
-  background: #d1fae5;
-  color: #065f46;
-}
-
-.status.info {
-  background: #dbeafe;
-  color: #1e40af;
-}
 </style>

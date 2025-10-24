@@ -122,6 +122,20 @@ const handleClick = () => {
   &:hover {
     transform: scale(1.05);
     background: linear-gradient(135deg, #A0A0FF 0%, #5D78FF 100%);
+    cursor: pointer;
+    
+    // hover时所有文字变为白色
+    .task-card__title,
+    .task-card__number,
+    .task-card__unit {
+      color: #FFFFFF !important;
+    }
+    
+    // hover时tag背景变为白色，字体变为紫色
+    .task-card__tag {
+      background: #FFFFFF !important;
+      color: #A0A0FF !important;
+    }
   }
   
   &--clickable {
