@@ -1,6 +1,6 @@
 {
   "name": "miles-wang-vue-components",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A high-quality Vue 3 component library with TypeScript support",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
