@@ -119,7 +119,7 @@
         <!-- 轴标签 -->
         <text
           v-if="config.xAxisLabel"
-          :x="width / 2"
+          :x="padding.left + chartWidth / 2"
           :y="height - 25"
           class="line-chart__axis-label line-chart__axis-label--x"
           text-anchor="middle"

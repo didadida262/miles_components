@@ -60,10 +60,29 @@
             @validation-error="handleValidationError"
           />
         </div>
+        </div>
+
+      <div class="demo-section">
+        <h2>自适应宽度 LineChart 演示</h2>
+        <p>同样的图表，使用 :auto-width="true" 自动适应容器宽度</p>
+        <div class="adaptive-chart-container">
+          <LineChart
+            :data="chartData"
+            :config="chartConfig"
+            :height="350"
+            :auto-width="true"
+            :clickable="true"
+            :click-data="{ type: 'inventory-turnover' }"
+            :enable-validation="true"
+            @click="handleChartClick"
+            @point-click="handlePointClick"
+            @validation-error="handleValidationError"
+          />
+        </div>
       </div>
 
-    </main>
-  </div>
+      </main>
+    </div>
 </template>
 
 <script setup lang="ts">
