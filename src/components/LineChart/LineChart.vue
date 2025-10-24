@@ -188,7 +188,7 @@ const emit = defineEmits<{
 const padding = {
   top: 40,
   right: 20,
-  bottom: 90,
+  bottom: 70,
   left: 50
 }
 
