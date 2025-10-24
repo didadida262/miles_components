@@ -43,15 +43,102 @@
         </div>
       </div>
 
+      <div class="demo-section">
+        <h2>LineChart 组件演示</h2>
+        <p>库存周转率趋势图，支持交互和数据点点击</p>
+        <div class="chart-container">
+          <LineChart
+            :data="chartData"
+            :config="chartConfig"
+            :width="chartWidth"
+            :height="350"
+            :clickable="true"
+            :click-data="{ type: 'inventory-turnover' }"
+            @click="handleChartClick"
+            @point-click="handlePointClick"
+          />
+        </div>
+      </div>
+
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref, computed, onMounted, onUnmounted } from 'vue'
+import type { DataPoint, ChartConfig } from 'miles-wang-vue-components'
+
 // 处理卡片点击事件
 const handleCardClick = (clickData: any) => {
   console.log('TaskCard被点击了！', clickData)
 }
+
+// 图表数据
+const chartData = ref<DataPoint[]>([
+  { x: '2024-09', y: 4.2 },
+  { x: '2024-10', y: 4.4 },
+  { x: '2024-11', y: 3.7 },
+  { x: '2024-12', y: 4.0 },
+  { x: '2025-01', y: 3.6 },
+  { x: '2025-02', y: 4.6 },
+  { x: '2025-03', y: 3.5 },
+  { x: '2025-04', y: 3.9 },
+  { x: '2025-05', y: 3.6 },
+  { x: '2025-06', y: 5.8 },
+  { x: '2025-07', y: 4.8 }
+])
+
+// 图表配置
+const chartConfig = ref<ChartConfig>({
+  title: '库存周转率趋势',
+  subtitle: '(最近12个月)',
+  xAxisLabel: '月份',
+  yAxisLabel: '周转率',
+  yMin: 0,
+  yMax: 6,
+  yStep: 1,
+  showGrid: true,
+  showDots: true,
+  lineColor: '#A0A0FF',
+  dotColor: '#FFFFFF',
+  strokeWidth: 3,
+  dotSize: 6,
+  showShadow: true
+})
+
+// 处理图表点击事件
+const handleChartClick = (clickData: any) => {
+  console.log('LineChart被点击了！', clickData)
+}
+
+// 处理数据点点击事件
+const handlePointClick = (point: DataPoint, index: number) => {
+  console.log('数据点被点击了！', point, index)
+  alert(`点击了数据点：\n时间：${point.x}\n数值：${point.y}\n索引：${index}`)
+}
+
+// 响应式宽度计算
+const containerWidth = ref(0)
+
+const chartWidth = computed(() => {
+  return Math.max(450, containerWidth.value - 100) // 减去padding
+})
+
+const updateWidth = () => {
+  const container = document.querySelector('.chart-container')
+  if (container) {
+    containerWidth.value = container.clientWidth
+  }
+}
+
+onMounted(() => {
+  updateWidth()
+  window.addEventListener('resize', updateWidth)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', updateWidth)
+})
 </script>
 
 <style scoped>
@@ -115,6 +202,18 @@ const handleCardClick = (clickData: any) => {
   gap: 20px;
   align-items: flex-start;
   justify-content: flex-start;
+}
+
+.chart-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  margin-top: 16px;
+  box-sizing: border-box;
 }
 
 </style>
