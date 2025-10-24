@@ -70,11 +70,16 @@ const props = withDefaults(defineProps<TaskCardProps>(), {
 
 const emit = defineEmits<TaskCardEmits>()
 
+// 导入图标资源
+import pendingIcon from '../../assets/icons/icon_Pending.png'
+import purchaseIcon from '../../assets/icons/icon_Purchase.png'
+import scheduleIcon from '../../assets/icons/icon_Schedule.png'
+
 // 图标映射字典
 const iconMap: Record<string, string> = {
-  'pending': '/assets/icons/icon_ Pending.png',
-  'purchase': '/assets/icons/icon_ Purchase.png',
-  'schedule': '/assets/icons/icon_Schedule.png'
+  'pending': pendingIcon,
+  'purchase': purchaseIcon,
+  'schedule': scheduleIcon
 }
 
 // 获取图标路径

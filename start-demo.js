@@ -39,15 +39,15 @@ try {
   process.exit(1);
 }
 
-// 复制图片文件到playground
-console.log('📁 复制资源文件...');
+// 复制图标文件到playground（用于演示）
+console.log('📁 复制图标资源文件...');
 try {
-  execSync('mkdir -p playground/public/assets', { stdio: 'inherit' });
-  execSync('cp src/assets/sample.png playground/public/assets/', { stdio: 'inherit' });
-  console.log('✅ 资源文件复制完成\n');
+  execSync('mkdir -p playground/public/assets/icons', { stdio: 'inherit' });
+  execSync('cp src/assets/icons/*.png playground/public/assets/icons/', { stdio: 'inherit' });
+  console.log('✅ 图标资源文件复制完成\n');
 } catch (error) {
-  console.error('❌ 资源文件复制失败:', error.message);
-  process.exit(1);
+  console.log('⚠️  图标资源文件复制失败，但不影响组件使用（图标已内联）:', error.message);
+  console.log('✅ 继续启动演示页面...\n');
 }
 
 // 启动playground
