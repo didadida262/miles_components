@@ -8,8 +8,10 @@
   >
     <!-- 图表标题 -->
     <div class="line-chart__header">
-      <h3 class="line-chart__title">{{ config.title }}</h3>
-      <p v-if="config.subtitle" class="line-chart__subtitle">{{ config.subtitle }}</p>
+      <h3 class="line-chart__title">
+        {{ config.title }}
+        <span v-if="config.subtitle" class="line-chart__subtitle">{{ config.subtitle }}</span>
+      </h3>
     </div>
 
     <!-- 图表容器 -->
@@ -88,7 +90,7 @@
             v-for="(point, index) in data"
             :key="`x-label-${index}`"
             :x="getXPosition(point.x)"
-            :y="height - 45"
+            :y="height - 48"
             class="line-chart__x-label"
             text-anchor="middle"
           >
@@ -114,7 +116,7 @@
         <text
           v-if="config.xAxisLabel"
           :x="width / 2"
-          :y="height - 30"
+          :y="height - 35"
           class="line-chart__axis-label line-chart__axis-label--x"
           text-anchor="middle"
         >
@@ -136,8 +138,8 @@
 </template>
 
 <script setup lang="ts">
-import { computed, withDefaults, defineProps, defineEmits } from 'vue'
-import type { DataPoint, ChartConfig } from './LineChart.types'
+import { computed, withDefaults, defineProps, defineEmits, onMounted } from 'vue'
+import type { DataPoint, ChartConfig, ValidationResult } from './LineChart.types'
 
 // 定义Props接口
 interface Props {
@@ -147,6 +149,8 @@ interface Props {
   height?: number
   clickable?: boolean
   clickData?: any
+  enableValidation?: boolean
+  customValidator?: (data: DataPoint[]) => ValidationResult
 }
 
 // 设置默认值
@@ -155,6 +159,8 @@ const props = withDefaults(defineProps<Props>(), {
   height: 300,
   clickable: false,
   clickData: undefined,
+  enableValidation: true,
+  customValidator: undefined,
   config: () => ({
     title: '折线图',
     xAxisLabel: '',
@@ -175,14 +181,54 @@ const props = withDefaults(defineProps<Props>(), {
 const emit = defineEmits<{
   click: [data?: any]
   pointClick: [point: DataPoint, index: number]
+  validationError: [errors: string[]]
 }>()
 
 // 图表内边距
 const padding = {
   top: 40,
   right: 20,
-  bottom: 80,
+  bottom: 90,
   left: 50
+}
+
+// 数据验证函数
+const validateData = (data: DataPoint[]): ValidationResult => {
+  const errors: string[] = []
+  const warnings: string[] = []
+
+  if (!data || data.length === 0) {
+    errors.push('数据不能为空')
+    return { isValid: false, errors, warnings }
+  }
+
+  if (data.length < 2) {
+    errors.push('至少需要2个数据点才能绘制折线图')
+  }
+
+  data.forEach((point, index) => {
+    // 验证x值
+    if (typeof point.x !== 'string' || point.x.trim() === '') {
+      errors.push(`第${index + 1}个数据点的x值必须是非空字符串`)
+    }
+    
+    // 验证y值
+    if (typeof point.y !== 'number' || isNaN(point.y) || !isFinite(point.y)) {
+      errors.push(`第${index + 1}个数据点的y值必须是有效数字`)
+    }
+    
+    // 警告：负值
+    if (point.y < 0) {
+      warnings.push(`第${index + 1}个数据点的y值为负数`)
+    }
+    
+    // 警告：极大值
+    if (Math.abs(point.y) > 1000000) {
+      warnings.push(`第${index + 1}个数据点的y值过大，可能影响图表显示`)
+    }
+  })
+
+  return { isValid: errors.length === 0, errors, warnings }
 }
 
 // 计算图表区域尺寸
@@ -229,28 +275,22 @@ const pathData = computed(() => {
   // 开始路径
   path += `M ${points[0].x},${points[0].y}`
 
-  // 使用贝塞尔曲线创建平滑连接
+  // 使用统一的贝塞尔曲线算法
   for (let i = 1; i < points.length; i++) {
     const currentPoint = points[i]
     const prevPoint = points[i - 1]
 
-    // 计算控制点（使用更平滑的算法）
-    let controlX, controlY
-
-    if (i === 1) {
-      // 第一个控制点
-      controlX = prevPoint.x + (currentPoint.x - prevPoint.x) * 0.5
-      controlY = prevPoint.y + (currentPoint.y - prevPoint.y) * 0.5
-    } else if (i === points.length - 1) {
-      // 最后一个控制点
-      controlX = currentPoint.x - (currentPoint.x - prevPoint.x) * 0.5
-      controlY = currentPoint.y - (currentPoint.y - prevPoint.y) * 0.5
-    } else {
-      // 中间控制点
-      const nextPoint = points[i + 1]
-      controlX = currentPoint.x - (nextPoint.x - prevPoint.x) * 0.25
-      controlY = currentPoint.y - (nextPoint.y - prevPoint.y) * 0.25
-    }
+    // 计算控制点 - 根据数据变化幅度动态调整弧度
+    const deltaX = currentPoint.x - prevPoint.x
+    const deltaY = currentPoint.y - prevPoint.y
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    
+    // 根据Y轴变化幅度调整弧度强度
+    const yChange = Math.abs(deltaY)
+    const curvatureFactor = Math.min(0.6, Math.max(0.2, yChange / 50)) // 动态弧度因子
+    
+    const controlX = prevPoint.x + deltaX * curvatureFactor
+    const controlY = prevPoint.y + deltaY * curvatureFactor
 
     path += ` Q ${controlX},${controlY} ${currentPoint.x},${currentPoint.y}`
   }
@@ -271,25 +311,22 @@ const fillPathData = computed(() => {
   // 开始路径 - 从第一个点开始
   path += `M ${points[0].x},${points[0].y}`
 
-  // 使用贝塞尔曲线创建平滑连接
+  // 使用统一的贝塞尔曲线算法（与主路径完全一致）
   for (let i = 1; i < points.length; i++) {
     const currentPoint = points[i]
     const prevPoint = points[i - 1]
 
-    // 计算控制点（与主路径保持一致）
-    let controlX, controlY
-
-    if (i === 1) {
-      controlX = prevPoint.x + (currentPoint.x - prevPoint.x) * 0.5
-      controlY = prevPoint.y + (currentPoint.y - prevPoint.y) * 0.5
-    } else if (i === points.length - 1) {
-      controlX = currentPoint.x - (currentPoint.x - prevPoint.x) * 0.5
-      controlY = currentPoint.y - (currentPoint.y - prevPoint.y) * 0.5
-    } else {
-      const nextPoint = points[i + 1]
-      controlX = currentPoint.x - (nextPoint.x - prevPoint.x) * 0.25
-      controlY = currentPoint.y - (nextPoint.y - prevPoint.y) * 0.25
-    }
+    // 计算控制点 - 与主路径保持一致的动态弧度
+    const deltaX = currentPoint.x - prevPoint.x
+    const deltaY = currentPoint.y - prevPoint.y
+    const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY)
+    
+    // 根据Y轴变化幅度调整弧度强度
+    const yChange = Math.abs(deltaY)
+    const curvatureFactor = Math.min(0.6, Math.max(0.2, yChange / 50)) // 动态弧度因子
+    
+    const controlX = prevPoint.x + deltaX * curvatureFactor
+    const controlY = prevPoint.y + deltaY * curvatureFactor
 
     path += ` Q ${controlX},${controlY} ${currentPoint.x},${currentPoint.y}`
   }
@@ -313,6 +350,20 @@ const handleClick = () => {
 const handlePointClick = (point: DataPoint, index: number) => {
   emit('pointClick', point, index)
 }
+
+// 数据验证
+onMounted(() => {
+  if (props.enableValidation) {
+    const validation = props.customValidator ? props.customValidator(props.data) : validateData(props.data)
+    if (!validation.isValid) {
+      emit('validationError', validation.errors)
+      console.error('LineChart数据验证失败:', validation.errors)
+    }
+    if (validation.warnings.length > 0) {
+      console.warn('LineChart数据警告:', validation.warnings)
+    }
+  }
+})
 </script>
 
 <style lang="less" scoped>
@@ -328,7 +379,6 @@ const handlePointClick = (point: DataPoint, index: number) => {
   -ms-user-select: none;
 
   &:hover {
-    transform: scale(1.02);
     box-shadow: 0 8px 32px rgba(160, 160, 255, 0.2);
   }
 
@@ -347,13 +397,13 @@ const handlePointClick = (point: DataPoint, index: number) => {
   color: #1F2937;
   margin: 0 0 4px 0;
   line-height: 1.4;
-}
-
-.line-chart__subtitle {
-  font-size: 14px;
-  color: #6B7280;
-  margin: 0;
-  line-height: 1.4;
+  
+  .line-chart__subtitle {
+    font-size: 14px;
+    font-weight: 400;
+    color: #6B7280;
+    margin-left: 8px;
+  }
 }
 
 .line-chart__container {
@@ -396,7 +446,7 @@ const handlePointClick = (point: DataPoint, index: number) => {
 
 .line-chart__x-label,
 .line-chart__y-label {
-  font-size: 11px;
+  font-size: 10px;
   fill: #6B7280;
   font-weight: 500;
 }

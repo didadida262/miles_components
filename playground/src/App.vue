@@ -54,8 +54,10 @@
             :height="350"
             :clickable="true"
             :click-data="{ type: 'inventory-turnover' }"
+            :enable-validation="true"
             @click="handleChartClick"
             @point-click="handlePointClick"
+            @validation-error="handleValidationError"
           />
         </div>
       </div>
@@ -115,6 +117,12 @@ const handleChartClick = (clickData: any) => {
 const handlePointClick = (point: DataPoint, index: number) => {
   console.log('数据点被点击了！', point, index)
   alert(`点击了数据点：\n时间：${point.x}\n数值：${point.y}\n索引：${index}`)
+}
+
+// 处理验证错误
+const handleValidationError = (errors: string[]) => {
+  console.error('数据验证错误:', errors)
+  alert(`数据验证失败：\n${errors.join('\n')}`)
 }
 
 // 响应式宽度计算
