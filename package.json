@@ -1,6 +1,6 @@
 {
   "name": "miles-wang-vue-components",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "A high-quality Vue 3 component library with TypeScript support",
   "main": "dist/index.js",
   "module": "dist/index.es.js",
@@ -17,7 +17,10 @@
     "prepublishOnly": "npm run build",
     "test": "echo \"No tests specified\" && exit 0",
     "lint": "eslint src --ext .vue,.js,.ts,.jsx,.tsx --fix",
-    "type-check": "vue-tsc --noEmit"
+    "type-check": "vue-tsc --noEmit",
+    "playground": "cd playground && npm run dev",
+    "demo": "npm run build && npm run playground",
+    "start-demo": "node start-demo.js"
   },
   "keywords": [
     "vue",

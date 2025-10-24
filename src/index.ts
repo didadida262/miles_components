@@ -8,6 +8,7 @@ import { registerComponents } from './components'
 
 // 引入样式文件
 import './styles/index.css'
+import './components/TaskCard/TaskCard.vue'
 
 // 导出所有组件
 export * from './components'

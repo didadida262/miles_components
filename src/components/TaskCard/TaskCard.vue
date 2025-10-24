@@ -70,18 +70,10 @@ const props = withDefaults(defineProps<TaskCardProps>(), {
 
 const emit = defineEmits<TaskCardEmits>()
 
-// 获取图标路径
+// 获取图标路径 - 统一使用sample.png
 const getIconSrc = (iconType: string) => {
-  // 使用import方式导入SVG图标，确保正确的路径解析
-  const iconMap: Record<string, string> = {
-    'clipboard': new URL('@/assets/icons/clipboard.svg', import.meta.url).href,
-    'shopping-cart': new URL('@/assets/icons/shopping-cart.svg', import.meta.url).href,
-    'folder': new URL('@/assets/icons/folder.svg', import.meta.url).href,
-    'document': new URL('@/assets/icons/document.svg', import.meta.url).href,
-    'calendar': new URL('@/assets/icons/calendar.svg', import.meta.url).href,
-    'task': new URL('@/assets/icons/task.svg', import.meta.url).href
-  }
-  return iconMap[iconType] || new URL('@/assets/icons/clipboard.svg', import.meta.url).href
+  // 统一使用sample.png图片
+  return '/assets/sample.png'
 }
 
 // 处理点击事件
@@ -104,39 +96,20 @@ const handleClick = () => {
   background: linear-gradient(135deg, rgba(255, 255, 255, 0.95) 0%, rgba(255, 255, 255, 0.28) 100%);
   border-radius: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  transition: all 0.3s ease;
-  min-height: 120px;
-  overflow: hidden;
-  width: 100%;
-  max-width: 100%;
+  transition: all 0.6s ease;
+  width: 280px;
+  min-height: 110px;
+  max-width: 280px;
   box-sizing: border-box;
+  flex-shrink: 0;
+  
+  &:hover {
+    transform: scale(1.05);
+    background: linear-gradient(135deg, #A0A0FF 0%, #5D78FF 100%);
+  }
   
   &--clickable {
     cursor: pointer;
-    
-    &:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
-      background: linear-gradient(135deg, #A0A0FF 0%, #5D78FF 100%);
-      color: #ffffff;
-      
-      .task-card__title {
-        color: #ffffff;
-      }
-      
-      .task-card__tag {
-        background: rgba(255, 255, 255, 0.2);
-        color: #ffffff;
-      }
-      
-      .task-card__number {
-        color: #ffffff;
-      }
-      
-      .task-card__unit {
-        color: rgba(255, 255, 255, 0.8);
-      }
-    }
   }
 }
 
@@ -180,7 +153,7 @@ const handleClick = () => {
   color: #6B7280;
   font-size: 12px;
   font-weight: 500;
-  border-radius: 12px;
+  border-radius: 16px;
   white-space: nowrap;
   flex-shrink: 0;
   max-width: 80px;
@@ -233,7 +206,6 @@ const handleClick = () => {
 // hover时的图标样式
 .task-card--clickable:hover .task-card__icon {
   .task-card__icon-img {
-    filter: brightness(1.2) contrast(1.1);
     transform: scale(1.05);
   }
 }
