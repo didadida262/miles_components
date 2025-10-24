@@ -341,3 +341,4 @@ If you have any questions or need help, please:
 ---
 
 Made with ❤️ by [Miles Wang](https://github.com/miles-wang)
+npm包地址：https://www.npmjs.com/package/miles-wang-vue-components?activeTab=readme
