@@ -1,0 +1,25 @@
+{
+  "name": "@components/task-card",
+  "version": "1.0.0",
+  "description": "TaskCard 组件 - 基于UI设计图实现的高质量卡片组件",
+  "main": "index.ts",
+  "files": [
+    "TaskCard.vue",
+    "TaskCardDemo.vue", 
+    "TaskCard.types.ts",
+    "index.ts",
+    "README.md"
+  ],
+  "keywords": [
+    "vue",
+    "component",
+    "card",
+    "ui",
+    "typescript"
+  ],
+  "author": "AI Assistant",
+  "license": "MIT",
+  "peerDependencies": {
+    "vue": "^3.0.0"
+  }
+}
