@@ -21,7 +21,7 @@ export interface CardProps {
 // 组件事件接口
 export interface CardEmits {
   /** 点击事件 */
-  click?: (event: MouseEvent) => void
+  (e: 'click', event: MouseEvent): void
 }
 
 // 组件配置类型
