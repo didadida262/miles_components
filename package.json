@@ -1,5 +1,5 @@
 {
-  "name": "@miles-wang/vue-components",
+  "name": "miles-wang-vue-components",
   "version": "1.0.0",
   "description": "A high-quality Vue 3 component library with TypeScript support",
   "main": "dist/index.js",

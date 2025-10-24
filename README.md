@@ -21,11 +21,11 @@ A high-quality Vue 3 component library with TypeScript support, built for modern
 ## 📦 Installation
 
 ```bash
-npm install @miles-wang/vue-components
+npm install miles-wang-vue-components
 # or
-yarn add @miles-wang/vue-components
+yarn add miles-wang-vue-components
 # or
-pnpm add @miles-wang/vue-components
+pnpm add miles-wang-vue-components
 ```
 
 ## 🚀 Quick Start
@@ -35,7 +35,7 @@ pnpm add @miles-wang/vue-components
 ```javascript
 // main.js
 import { createApp } from 'vue'
-import VueComponents from '@miles-wang/vue-components'
+import VueComponents from 'miles-wang-vue-components'
 import App from './App.vue'
 
 const app = createApp(App)
@@ -57,7 +57,7 @@ app.mount('#app')
 </template>
 
 <script setup>
-import { TaskCard } from '@miles-wang/vue-components'
+import { TaskCard } from 'miles-wang-vue-components'
 </script>
 ```
 
@@ -77,7 +77,7 @@ import { TaskCard } from '@miles-wang/vue-components'
 </template>
 
 <script setup>
-import { TaskCard } from '@miles-wang/vue-components'
+import { TaskCard } from 'miles-wang-vue-components'
 
 const handleCardClick = (data) => {
   console.log('Card clicked:', data)
