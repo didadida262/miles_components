@@ -131,7 +131,8 @@ const handleValidationError = (errors: string[]) => {
 const containerWidth = ref(0)
 
 const chartWidth = computed(() => {
-  return Math.max(800, containerWidth.value - 100) // 增加最小宽度，确保填满容器
+  // 充分利用容器宽度，减去一些边距
+  return Math.max(600, containerWidth.value - 40)
 })
 
 const updateWidth = () => {

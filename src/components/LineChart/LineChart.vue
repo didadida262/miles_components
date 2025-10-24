@@ -247,7 +247,12 @@ const getXPosition = (x: string | number) => {
   if (index === -1) return padding.left
   
   // 让数据点从图表区域开始到结束均匀分布，充分利用宽度
-  const step = chartWidth.value / Math.max(1, props.data.length - 1)
+  // 当只有一个数据点时，放在中间位置
+  if (props.data.length === 1) {
+    return padding.left + chartWidth.value / 2
+  }
+  
+  const step = chartWidth.value / (props.data.length - 1)
   return padding.left + index * step
 }
 
