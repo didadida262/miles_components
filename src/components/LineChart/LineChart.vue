@@ -116,7 +116,7 @@
         <text
           v-if="config.xAxisLabel"
           :x="width / 2"
-          :y="height - 35"
+          :y="height - 25"
           class="line-chart__axis-label line-chart__axis-label--x"
           text-anchor="middle"
         >
@@ -178,11 +178,7 @@ const props = withDefaults(defineProps<Props>(), {
   })
 })
 
-const emit = defineEmits<{
-  click: [data?: any]
-  pointClick: [point: DataPoint, index: number]
-  validationError: [errors: string[]]
-}>()
+const emit = defineEmits(['click', 'pointClick', 'validationError'])
 
 // 图表内边距
 const padding = {

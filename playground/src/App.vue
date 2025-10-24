@@ -68,7 +68,9 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { DataPoint, ChartConfig } from 'miles-wang-vue-components'
+import type { DataPoint, ChartConfig } from '../../src/components/LineChart/LineChart.types'
+import TaskCard from '../../src/components/TaskCard/TaskCard.vue'
+import LineChart from '../../src/components/LineChart/LineChart.vue'
 
 // 处理卡片点击事件
 const handleCardClick = (clickData: any) => {
