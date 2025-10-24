@@ -48,6 +48,14 @@
           </filter>
         </defs>
 
+        <!-- 填充区域 -->
+        <path
+          :d="fillPathData"
+          :fill="config.lineColor"
+          fill-opacity="0.15"
+          class="line-chart__fill"
+        />
+
         <!-- 数据路径 -->
         <path
           :d="pathData"
@@ -208,17 +216,90 @@ const getYPosition = (y: number) => {
   return padding.top + chartHeight.value * (1 - ratio)
 }
 
-// 生成路径数据
+// 生成平滑路径数据（贝塞尔曲线）
 const pathData = computed(() => {
   if (props.data.length < 2) return ''
-  
-  const points = props.data.map(point => {
-    const x = getXPosition(point.x)
-    const y = getYPosition(point.y)
-    return `${x},${y}`
-  })
-  
-  return `M ${points.join(' L ')}`
+
+  let path = ''
+  const points = props.data.map(point => ({
+    x: getXPosition(point.x),
+    y: getYPosition(point.y)
+  }))
+
+  // 开始路径
+  path += `M ${points[0].x},${points[0].y}`
+
+  // 使用贝塞尔曲线创建平滑连接
+  for (let i = 1; i < points.length; i++) {
+    const currentPoint = points[i]
+    const prevPoint = points[i - 1]
+
+    // 计算控制点（使用更平滑的算法）
+    let controlX, controlY
+
+    if (i === 1) {
+      // 第一个控制点
+      controlX = prevPoint.x + (currentPoint.x - prevPoint.x) * 0.5
+      controlY = prevPoint.y + (currentPoint.y - prevPoint.y) * 0.5
+    } else if (i === points.length - 1) {
+      // 最后一个控制点
+      controlX = currentPoint.x - (currentPoint.x - prevPoint.x) * 0.5
+      controlY = currentPoint.y - (currentPoint.y - prevPoint.y) * 0.5
+    } else {
+      // 中间控制点
+      const nextPoint = points[i + 1]
+      controlX = currentPoint.x - (nextPoint.x - prevPoint.x) * 0.25
+      controlY = currentPoint.y - (nextPoint.y - prevPoint.y) * 0.25
+    }
+
+    path += ` Q ${controlX},${controlY} ${currentPoint.x},${currentPoint.y}`
+  }
+
+  return path
+})
+
+// 生成填充路径数据（从X轴填充到曲线）
+const fillPathData = computed(() => {
+  if (props.data.length < 2) return ''
+
+  let path = ''
+  const points = props.data.map(point => ({
+    x: getXPosition(point.x),
+    y: getYPosition(point.y)
+  }))
+
+  // 开始路径 - 从第一个点开始
+  path += `M ${points[0].x},${points[0].y}`
+
+  // 使用贝塞尔曲线创建平滑连接
+  for (let i = 1; i < points.length; i++) {
+    const currentPoint = points[i]
+    const prevPoint = points[i - 1]
+
+    // 计算控制点（与主路径保持一致）
+    let controlX, controlY
+
+    if (i === 1) {
+      controlX = prevPoint.x + (currentPoint.x - prevPoint.x) * 0.5
+      controlY = prevPoint.y + (currentPoint.y - prevPoint.y) * 0.5
+    } else if (i === points.length - 1) {
+      controlX = currentPoint.x - (currentPoint.x - prevPoint.x) * 0.5
+      controlY = currentPoint.y - (currentPoint.y - prevPoint.y) * 0.5
+    } else {
+      const nextPoint = points[i + 1]
+      controlX = currentPoint.x - (nextPoint.x - prevPoint.x) * 0.25
+      controlY = currentPoint.y - (nextPoint.y - prevPoint.y) * 0.25
+    }
+
+    path += ` Q ${controlX},${controlY} ${currentPoint.x},${currentPoint.y}`
+  }
+
+  // 连接到X轴形成封闭区域
+  const lastPoint = points[points.length - 1]
+  const firstPoint = points[0]
+  path += ` L ${lastPoint.x},${padding.top + chartHeight.value} L ${firstPoint.x},${padding.top + chartHeight.value} Z`
+
+  return path
 })
 
 // 处理点击事件
@@ -291,6 +372,10 @@ const handlePointClick = (point: DataPoint, index: number) => {
   stroke: #E5E7EB;
   stroke-width: 1;
   stroke-dasharray: 2,2;
+}
+
+.line-chart__fill {
+  transition: all 0.3s ease;
 }
 
 .line-chart__line {
