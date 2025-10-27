@@ -94,7 +94,7 @@
             v-for="(point, index) in data"
             :key="`x-label-${index}`"
             :x="getXPosition(point.x)"
-            :y="height - 48"
+            :y="actualHeight - 48"
             class="line-chart__x-label"
             text-anchor="middle"
           >
@@ -119,8 +119,8 @@
         <!-- 轴标签 -->
         <text
           v-if="config.xAxisLabel"
-          :x="padding.left + chartWidth / 2"
-          :y="height - 25"
+          :x="actualWidth / 2"
+          :y="actualHeight - 25"
           class="line-chart__axis-label line-chart__axis-label--x"
           text-anchor="middle"
         >
@@ -133,6 +133,7 @@
           :y="padding.top - 10"
           class="line-chart__axis-label line-chart__axis-label--y"
           text-anchor="middle"
+          dominant-baseline="auto"
         >
           {{ config.yAxisLabel }}
         </text>
@@ -193,7 +194,7 @@ const padding = {
   top: 40,
   right: 20,
   bottom: 70,
-  left: 50
+  left: 60
 }
 
 // 数据验证函数
