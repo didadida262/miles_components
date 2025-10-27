@@ -61,15 +61,31 @@
           />
         </div>
         </div>
+
+      <div class="demo-section">
+        <h2>LineChartCard 组件演示（简化版本）</h2>
+        <p>使用更简洁的方式配置完整的图表，包含标题、副标题、数据等所有元素</p>
+        <div class="chart-container">
+          <LineChartCard
+            :chart-data="completeChartData"
+            :width="chartWidth"
+            :height="350"
+            :clickable="true"
+            @click="handleChartClick"
+            @point-click="handlePointClick"
+          />
+        </div>
+      </div>
       </main>
     </div>
 </template>
 
 <script setup lang="ts">
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import type { DataPoint, ChartConfig } from '../../src/components/LineChart/LineChart.types'
+import type { DataPoint, ChartConfig, CompleteChartData } from '../../src/components/LineChart/LineChart.types'
 import TaskCard from '../../src/components/TaskCard/TaskCard.vue'
 import LineChart from '../../src/components/LineChart/LineChart.vue'
+import LineChartCard from '../../src/components/LineChart/LineChartCard.vue'
 
 // 处理卡片点击事件
 const handleCardClick = (clickData: any) => {
@@ -107,6 +123,31 @@ const chartConfig = ref<ChartConfig>({
   strokeWidth: 3,
   dotSize: 6,
   showShadow: true
+})
+
+// 完整的图表数据配置（简化版本）
+const completeChartData = ref<CompleteChartData>({
+  title: '销售趋势',
+  subtitle: '(最近6个月)',
+  data: chartData.value,
+  xAxisLabel: '月份',
+  yAxisLabel: '销售额(万元)',
+  yAxis: {
+    min: 0,
+    max: 6,
+    step: 1
+  },
+  style: {
+    lineColor: '#3B82F6',
+    dotColor: '#FFFFFF',
+    strokeWidth: 3,
+    dotSize: 6
+  },
+  display: {
+    showGrid: true,
+    showDots: true,
+    showShadow: true
+  }
 })
 
 // 处理图表点击事件

@@ -53,6 +53,51 @@ export interface ChartConfig {
   showShadow?: boolean
 }
 
+/**
+ * 完整的图表数据接口 - 用于快速配置完整图表
+ */
+export interface CompleteChartData {
+  /** 图表标题 */
+  title: string
+  /** 图表副标题 */
+  subtitle?: string
+  /** 图表数据 */
+  data: DataPoint[]
+  /** X轴标签 */
+  xAxisLabel?: string
+  /** Y轴标签 */
+  yAxisLabel?: string
+  /** Y轴配置 */
+  yAxis?: {
+    /** 最小值 */
+    min?: number
+    /** 最大值 */
+    max?: number
+    /** 步长 */
+    step?: number
+  }
+  /** 样式配置 */
+  style?: {
+    /** 线条颜色 */
+    lineColor?: string
+    /** 数据点颜色 */
+    dotColor?: string
+    /** 线条宽度 */
+    strokeWidth?: number
+    /** 数据点大小 */
+    dotSize?: number
+  }
+  /** 显示配置 */
+  display?: {
+    /** 是否显示网格线 */
+    showGrid?: boolean
+    /** 是否显示数据点 */
+    showDots?: boolean
+    /** 是否显示阴影效果 */
+    showShadow?: boolean
+  }
+}
+
 // 组件Props接口
 export interface LineChartProps {
   /** 图表数据（必须是非空数组） */
