@@ -192,7 +192,7 @@ const emit = defineEmits(['click', 'pointClick', 'validationError'])
 // 图表内边距
 const padding = {
   top: 40,
-  right: 20,
+  right: 40,
   bottom: 70,
   left: 60
 }
