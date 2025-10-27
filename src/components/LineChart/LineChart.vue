@@ -283,14 +283,16 @@ const getXPosition = (x: string | number) => {
   const index = props.data.findIndex(point => point.x === x)
   if (index === -1) return padding.left
   
-  // 让数据点从图表区域开始到结束均匀分布，充分利用宽度
   // 当只有一个数据点时，放在中间位置
   if (props.data.length === 1) {
     return padding.left + chartWidth.value / 2
   }
   
-  const step = chartWidth.value / (props.data.length - 1)
-  return padding.left + index * step
+  // 在左右两侧预留额外空间，避免溢出
+  const extraPadding = 20 // 额外内边距
+  const availableWidth = chartWidth.value - extraPadding * 2
+  const step = availableWidth / (props.data.length - 1)
+  return padding.left + extraPadding + index * step
 }
 
 // 获取Y轴位置
